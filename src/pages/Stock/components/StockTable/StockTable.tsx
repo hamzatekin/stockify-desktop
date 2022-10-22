@@ -15,18 +15,18 @@ const StockTable = () => {
           columns={[
             {
               accessor: 'name',
-              render: ({ firstName, lastName }) => `${firstName} ${lastName}`,
+              render: ({ firstName, lastName }) => `${firstName} ${lastName}`
             },
             { accessor: 'department.name' },
             { accessor: 'department.company.name' },
             {
               accessor: 'birthDate',
-              render: ({ birthDate }) => dayjs(birthDate).format('MMM DD YYYY'),
+              render: ({ birthDate }) => dayjs(birthDate).format('MMM DD YYYY')
             },
             {
               accessor: 'age',
-              render: ({ birthDate }) => dayjs().diff(birthDate, 'y'),
-            },
+              render: ({ birthDate }) => dayjs().diff(birthDate, 'y')
+            }
           ]}
         />
       </Box>

@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String?  @unique
+}
+
+model Stock {
+  id         Int            @id @default(autoincrement())
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  name       String?        @unique
+  barCode    String?        @unique
+  quantity   Int
+  vat        VAT_PERCENTAGE @default(VAT_1)
+  StockPrice StockPrice[]
+}
+
+enum VAT_PERCENTAGE {
+  VAT_1
+  VAT_8
+  VAT_18
+}
+
+model StockPrice {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  salePrice Float
+  buyPrice  Float?
+  stock     Stock      @relation(fields: [stockId], references: [id])
+  stockId   Int
+  Unit      Unit?      @relation(fields: [unitId], references: [id])
+  unitId    Int
+  SaleItem  SaleItem[]
+}
+
+model Unit {
+  id         Int          @id @default(autoincrement())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  name       String?      @unique
+  quantity   Int
+  StockPrice StockPrice[]
+}
+
+model Sale {
+  id         Int        @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  totalPrice Float
+  SaleItem   SaleItem[]
+}
+
+model SaleItem {
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  quantity     Float
+  stockPriceId Int
+  StockPrice   StockPrice @relation(fields: [stockPriceId], references: [id])
+  Sale         Sale       @relation(fields: [saleId], references: [id])
+  saleId       Int
+}
